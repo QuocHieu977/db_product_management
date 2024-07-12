@@ -1,0 +1,368 @@
+use project_final;
+
+-- tạo bảng User
+CREATE TABLE Users (
+	id INT PRIMARY KEY,
+	fullname VARCHAR(30),
+    email VARCHAR(50),
+    phone_number VARCHAR(20),
+    password VARCHAR(20),
+    role_id INT,
+    create_at DATETIME
+);
+
+-- tạo bảng Categories 
+CREATE TABLE Categories(
+	id INT PRIMARY KEY,
+    name VARCHAR(20),
+    description VARCHAR(200)
+);
+
+-- tạo bảng Supplier
+CREATE TABLE Supplier(
+	id INT PRIMARY KEY,
+    name VARCHAR(20),
+    phone_number VARCHAR(20),
+    email VARCHAR(20),
+    address VARCHAR(100)
+);
+
+-- tạo bảng Products
+CREATE TABLE Products (
+	id INT PRIMARY KEY,
+    name VARCHAR(200),
+    price DOUBLE,
+    description VARCHAR(500),
+    category_id INT,
+    supplier_id INT,
+    create_at DATETIME,
+	FOREIGN KEY(category_id) REFERENCES Categories(id),
+	FOREIGN KEY(supplier_id) REFERENCES Supplier(id)
+);
+
+-- tạo bảng Gallery
+CREATE TABLE Gallery(
+	id INT PRIMARY KEY,
+    thumbnail VARCHAR(200),
+    product_id INT,
+    FOREIGN KEY(product_id) REFERENCES Products(id)
+);
+
+-- tạo bảng CartItem
+CREATE TABLE CartItem(
+	id INT,
+	quantity INT,
+    product_id INT,
+    cart_id INT,
+    FOREIGN KEY(cart_id) REFERENCES Cart(id),
+    FOREIGN KEY(product_id) REFERENCES Products(id)
+);
+
+-- tạo bảng Cart
+CREATE TABLE Cart(
+	id INT PRIMARY KEY,
+    user_id INT,
+    create_at DATETIME,
+	FOREIGN KEY(user_id) REFERENCES Users(id)
+);
+
+-- tạo bảng Orders
+CREATE TABLE Orders(
+	id INT PRIMARY KEY,
+    user_id INT,
+    shipping_id INT,
+	FOREIGN KEY(user_id) REFERENCES Users(id),
+	FOREIGN KEY(shipping_id) REFERENCES Shipping(id)
+);
+
+-- tạo bảng OrderDetail
+CREATE TABLE OrderDetail(
+	id INT PRIMARY KEY,
+    quantity INT,
+    product_id INT,
+    order_id INT,
+	FOREIGN KEY(product_id) REFERENCES Products(id),
+	FOREIGN KEY(order_id) REFERENCES Orders(id)
+);
+
+-- tạo bảng Shipping
+CREATE TABLE Shipping(
+	id INT PRIMARY KEY,
+    method VARCHAR(100),
+    date DATE,
+    create_at DATETIME
+);
+
+-- tạo bảng OrderStatus
+CREATE TABLE OrderStatus(
+	id INT PRIMARY KEY,
+    name VARCHAR(100),
+    description VARCHAR(100),
+    order_id INT,
+	FOREIGN KEY(order_id) REFERENCES Orders(id)
+);
+
+-- tạo bảng Review
+CREATE TABLE Review(
+	id INT PRIMARY KEY,
+    rating INT,
+    comment VARCHAR(500),
+    product_id INT,
+    user_id INT,
+    create_at DATETIME,
+	FOREIGN KEY(product_id) REFERENCES Products(id),
+	FOREIGN KEY(user_id) REFERENCES Users(id)
+);
+
+-- tạo bảng Payments
+CREATE TABLE Payments(
+	id INT PRIMARY KEY,
+    method_payment VARCHAR(100),
+    order_id INT,
+	FOREIGN KEY(order_id) REFERENCES Orders(id),
+    create_at DATETIME
+);
+
+-- tạo dữ liệu bảng Users 
+INSERT INTO Users
+VALUES(1, 'Nguyen van A', 'a@gmail.com', '0123456789', '1234', 1, now()),
+(2, 'Nguyen van B', 'b@gmail', '0123456789', '1234', 1, now()),
+(3, 'Nguyen van C', 'c@gmail', '0123456789', '1234', 0, now());
+
+-- tạo dữ liệu bảng Supplier
+INSERT INTO Supplier
+VALUES(1, 'supplier_1' , '0123456789', 'sp1@gamil.com', 'hanoi'),
+(2, 'supplier_2' , '0123456789', 'sp2@gamil.com', 'hanoi'),
+(3, 'supplier_3' , '0123456789', 'sp3@gamil.com', 'hanoi'),
+(4, 'supplier_4' , '0123456789', 'sp4@gamil.com', 'hanoi'),
+(5, 'supplier_5' , '0123456789', 'sp5@gamil.com', 'hanoi');
+
+-- tạo dữ liệu bảng Categories
+INSERT INTO Categories
+VALUES 	(1, 'danh muc 1', 'day la danh muc 1'),
+		(2, 'danh muc 2', 'day la danh muc 2'),
+		(3, 'danh muc 3', 'day la danh muc 3'),
+		(4, 'danh muc 4', 'day la danh muc 4'),
+		(5, 'danh muc 5', 'day la danh muc 5');
+
+-- tạo dữ liệu bảng Product
+INSERT INTO Products
+VALUES 	(1, 'product-1', 1000, 'san pham 1', 1, 1, now()),
+		(2, 'product-2', 900, 'san pham 2', 2, 2, now()),
+		(3, 'product-3', 2000, 'san pham 3', 3, 3, now()),
+		(4, 'product-4', 3000, 'san pham 4', 4, 4, now()),
+		(5, 'product-5', 1300, 'san pham 5', 5, 4, now()),
+		(6, 'product-6', 1500, 'san pham 6', 4, 5, now()),
+		(7, 'product-7', 1800, 'san pham 7', 2, 2, now()),
+		(8, 'product-8', 1600, 'san pham 8', 1, 3, now()),
+		(9, 'product-9', 5000, 'san pham 9', 2, 2, now()),
+		(10, 'product-10', 4500, 'san pham 10', 1, 1, now());
+        
+INSERT INTO Products
+VALUES 	(11, 'product-11', 1000, 'san pham 11', 1, 1, now()),
+		(12, 'product-12', 900, 'san pham 12', 2, 2, now()),
+		(13, 'product-13', 2000, 'san pham 13', 3, 3, now()),
+		(14, 'product-14', 3000, 'san pham 14', 4, 4, now()),
+		(15, 'product-15', 1300, 'san pham 15', 5, 4, now());
+
+-- tạo dữ liệu bảng Gallery
+INSERT INTO Gallery
+VALUES  (1, 'img-1.png', 1),
+		(2, 'img-2.png', 1),
+		(3, 'img-1.png', 2),
+		(4, 'img-2.png', 2),
+		(5, 'img-1.png', 3),
+		(6, 'img-2.png', 3),
+		(7, 'img-1.png', 4),
+		(8, 'img-2.png', 4),
+		(9, 'img-1.png', 5),
+		(10, 'img-2.png', 5),
+		(11, 'img-1.png', 6),
+		(12, 'img-2.png', 6),
+		(13, 'img-1.png', 7),
+		(14, 'img-2.png', 7),
+		(15, 'img-1.png', 8),
+		(16, 'img-2.png', 8),
+		(17, 'img-1.png', 9),
+		(18, 'img-2.png', 9),
+		(19, 'img-1.png', 10),
+		(20, 'img-2.png', 10);
+
+-- tạo dữ liệu bảng Review
+INSERT INTO Review
+VALUES  (1, 4, 'san pham tot', 1, 1, now()),
+		(2, 3, 'san pham kem', 2, 1, now()),
+		(3, 4, 'san pham tot', 3, 1, now()),
+		(4, 5, 'san pham tot', 4, 1, now()),
+		(5, 3, 'san pham kem', 5, 2, now()),
+		(6, 4, 'san pham tot', 6, 2, now()),
+		(7, 5, 'san pham tot', 7, 1, now()),
+		(8, 4, 'san pham tot', 8, 1, now()),
+		(9, 3, 'san pham kem', 2, 1, now()),
+		(10, 4, 'san pham tot', 1, 2, now());
+
+-- tạo dữ liệu Shipping
+INSERT INTO Shipping
+VALUES  (1, 'giao hàng nhanh', '2024-07-15', now()),
+		(2, 'giao hàng tiết kiệm', '2024-07-20', now()),
+		(3, 'giao hàng siêu tốc', '2024-07-25', now());
+
+-- tạo dữ liệu Cart
+INSERT INTO Cart
+VALUES  (1, 1, now()),
+		(2, 2, now());
+
+-- tạo dữ liệu CartItem
+INSERT INTO CartItem
+VALUES  (1, 10, 1, 1),
+		(2, 10, 2, 1),  
+		(3, 13, 3, 1),  
+		(4, 12, 4, 1),  
+		(5, 8, 5, 2),  
+		(6, 10, 6, 2),  
+		(7, 6, 1, 2),  
+		(8, 7, 3, 2),  
+		(9, 15, 8, 2),  
+		(10, 3, 6, 2);  
+
+-- tạo dữ liệu Orders
+INSERT INTO Orders
+VALUES  (1, 1, 1, now()),
+		(2, 1, 2, now()),
+		(3, 1, 1, now()),
+		(4, 2, 3, now()),
+		(5, 2, 1, now()),
+		(6, 2, 2, now());
+
+-- tạo dữ liệu OrderStatus
+INSERT INTO OrderStatus
+VALUES (1, 'Đang xử lý', 'Đơn hàng đang được xử lý', 1),
+       (2, 'Đang giao hàng', 'Đơn hàng đang được giao đến khách hàng', 2),
+       (3, 'Đã giao hàng', 'Đơn hàng đã được giao thành công', 1),
+       (4, 'Đang xử lý', 'Đơn hàng đang được xử lý', 3),
+       (5, 'Đang giao hàng', 'Đơn hàng đang được giao đến khách hàng', 5),
+       (6, 'Đã giao hàng', 'Đơn hàng đã được giao thành công', 4),
+       (7, 'Đang xử lý', 'Đơn hàng đang được xử lý', 2),
+       (8, 'Đang giao hàng', 'Đơn hàng đang được giao đến khách hàng', 6),
+       (9, 'Đã giao hàng', 'Đơn hàng đã được giao thành công', 2);
+
+-- tạo dữ liệu OrderDetail       
+INSERT INTO OrderDetail
+VALUES 	(1, 10, 1, 1),
+		(2, 8, 2, 1),
+		(3, 15, 3, 2),
+		(4, 12, 5, 2),
+		(5, 5, 6, 3),
+		(6, 5, 7, 3),
+		(7, 6, 1, 4),
+		(8, 10, 10, 4),
+		(9, 10, 8, 5),
+		(10, 8, 9, 6);
+
+-- tạo dữ liệu Payments
+INSERT INTO Payments
+VALUES  (1, 'Credit card', 1, now()),
+		(2, 'PayPal', 2, now()),
+		(3, 'Cash on delivery', 3, now()),
+		(4, 'Bank transfer', 4, now()),
+		(5, 'PayPal', 5, now()),
+        (6, 'Bank transfer', 6, now());
+
+-- 1: Lấy tất cả các thông tin sản phẩm đã được đặt trong 1 đơn hàng cụ thể
+SELECT * FROM OrderDetail
+INNER JOIN Orders ON Orders.id = OrderDetail.order_id
+INNER JOIN Products ON Products.id = OrderDetail.product_id
+WHERE Orders.id = 2;
+
+-- 2: Tính tổng số tiền trong 1 đơn hàng cụ thể
+SELECT Orders.id, SUM(OrderDetail.quantity * Products.price) AS total_price FROM OrderDetail
+INNER JOIN Orders ON Orders.id = OrderDetail.order_id
+INNER JOIN Products ON Products.id = OrderDetail.product_id
+WHERE Orders.id = 2
+GROUP BY Orders.id;
+
+-- 3: Lấy danh sách các sản phẩm chưa có bất kỳ trong đơn đặt hàng nào
+SELECT * FROM OrderDetail
+RIGHT JOIN Products on Products.id = OrderDetail.product_id
+WHERE OrderDetail.id is null;
+
+-- 4: Đếm số lượng sản phẩm trong mỗi danh mục
+SELECT Categories.name, count(Products.id) as total_products FROM Categories
+INNER JOIN Products ON Products.category_id = Categories.id
+GROUP BY Categories.name
+ORDER BY total_products DESC;
+
+-- 5: Đếm số lượng sản phẩm trong mỗi nhà cung cấp
+SELECT Supplier.name, COUNT(Products.id) FROM Supplier
+INNER JOIN Products ON Products.supplier_id = Supplier.id
+GROUP BY Supplier.name;
+
+-- 6: Đếm số hình ảnh có trong mỗi sản phẩm
+SELECT name, COUNT(Gallery.id) as total_images FROM Products
+LEFT JOIN Gallery ON Gallery.product_id = Products.id
+GROUP BY name;
+
+-- 7: Tính tổng số lượng sản phẩm đã đặt bởi mỗi khách hàng
+SELECT Users.fullname, SUM(OrderDetail.quantity) AS total_product FROM OrderDetail
+INNER JOIN Orders ON OrderDetail.order_id = Orders.id
+INNER JOIN Users ON Users.id = Orders.user_id
+GROUP BY Users.fullname;
+
+-- 8: Lấy ra danh sách đơn hàng đơn hàng của một khách hàng cụ thể
+SELECT * FROM OrderDetail
+INNER JOIN Orders ON Orders.id = OrderDetail.order_id
+INNER JOIN Products ON Products.id = OrderDetail.product_id
+INNER JOIN Users ON Users.id = Orders.user_id
+WHERE Users.id = 1;
+
+-- 9: Lấy ra danh mục có nhiều sản phẩm nhiều nhất
+SELECT Categories.name, COUNT(Products.id) AS number_products_category FROM Categories
+INNER JOIN Products ON Categories.id = Products.category_id
+GROUP BY Categories.name
+ORDER BY number_products DESC
+LIMIT 1; 
+
+-- 10: Lấy ra nhà cung cấp sản phẩm nhiều nhất
+SELECT Supplier.name, COUNT(Products.id) AS number_product_supplier FROM Supplier
+INNER JOIN Products ON Supplier.id = Products.supplier_id
+GROUP BY Supplier.name
+ORDER BY number_product_supplier DESC
+LIMIT 1;
+
+-- 11: Tính tổng số sản phẩm đã đặt cho mỗi danh mục
+SELECT Categories.name as category_name, SUM(OrderDetail.quantity) AS total_product FROM OrderDetail
+INNER JOIN Products ON Products.id = OrderDetail.product_id
+INNER JOIN Categories ON Categories.id = Products.category_id
+GROUP BY Categories.name;
+
+-- 12: Lấy thông tin về top 3 khách hàng có số lượng sản phẩm đặt hàng lớn nhất
+SELECT Users.id AS user_id, Users.fullname as user_name, SUM(OrderDetail.quantity) AS total_ordered FROM OrderDetail
+INNER JOIN Orders ON Orders.id = OrderDetail.order_id
+INNER JOIN Users ON Users.id = Orders.user_id
+GROUP BY user_id, user_name
+ORDER BY total_ordered DESC
+LIMIT 1;
+
+-- 13: Lấy thông tin khách hàng đặt hàng nhiều hơn 4 lần trong khoảng thời gian cụ thể A -> B
+SELECT Users.id AS user_id, Users.fullname AS user_name,SUM(OrderDetail.quantity) AS total_product, COUNT(Orders.id) AS total_ordered FROM OrderDetail 
+INNER JOIN Orders ON Orders.id = OrderDetail.order_id
+INNER JOIN Users ON Users.id = Orders.user_id
+WHERE Orders.create_at BETWEEN '2024-07-09 00:00:00' AND '2024-07-11 00:00:00'
+GROUP BY user_id, user_name
+HAVING total_ordered > 4;
+
+-- 14: Lấy thông tin các sản phẩm đã được đặt hàng nhiều lần nhất và số lượng đơn đặt hàng tương ứng
+SELECT Products.id AS product_id, Products.name AS product_name, COUNT(Products.id) AS total_ordered, SUM(OrderDetail.quantity) AS number_product_ordered FROM OrderDetail
+INNER JOIN Products ON Products.id = OrderDetail.product_id
+GROUP BY product_id, product_name
+ORDER BY total_ordered DESC
+LIMIT 1;
+
+-- 15: Lấy tất cả đánh giá của 1 sản phẩm bất kỳ
+SELECT Products.name, group_concat(Review.comment separator ',') AS comment FROM Products
+INNER JOIN Review ON Review.product_id = Products.id
+INNER JOIN Users ON Review.user_id = Users.id
+WHERE Products.id = 2
+GROUP BY Products.name;
+
+
